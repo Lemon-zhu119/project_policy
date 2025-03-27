@@ -28,29 +28,45 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author Lemon-zhu119
+ * @date 2025-03-27
+ */
 @RestController
 @RequestMapping("/api/policy")
 public class SubmissionController {
+    /**  */
     @Autowired
     private ServerConfig serverConfig;
+    /**  */
     @Autowired
     private IPolicyService policyService;
+    /**  */
     @Autowired
     private MaterialService materialService;
+    /**  */
     @Autowired
     private ICompanyPolicySubmissionService companyPolicySubmissionService;
+    /**  */
     @Autowired
     private ICompanyPolicySubmissionDocumentService companyPolicySubmissionDocumentService;
 
+    /**  */
     @Autowired
     private PolicyLibraryService policyLibraryService;
+    /**  */
     @Autowired
     private CompanyServiceImpl companyService;
-    //本地测试用
+    /**  *///本地测试用
 //    private String filePath = System.getProperty("user.dir") + "/files/";
     //服务器内部路径
     private String filePath = "/root/ruoyi-server/files/";
 
+    /**
+     * @param id
+     * @param modelName
+     * @return
+     */
     @GetMapping("/cailiao")
     public Result<List<Material>> getCL(@RequestParam Integer id,
                                         @RequestParam String modelName) {
@@ -58,6 +74,9 @@ public class SubmissionController {
         return Result.success(caiLiaos);
     }
 
+    /**
+     * @return
+     */
     @GetMapping("/cailiaonumber")
     public Result<List<Map<String, Object>>> getDocNumber() {
         List<Map<String, Object>> docNumbers = new ArrayList<>();
@@ -80,6 +99,10 @@ public class SubmissionController {
         return Result.success(docNumbers);
     }
 
+    /**
+     * @param modelName
+     * @return
+     */
     @GetMapping("/cailiaoqingdan")
     public Result<Map<String, Object>> getDocDetail(@RequestParam String modelName) {
         Map<String, Object> docDetail = new HashMap<>();
@@ -95,6 +118,12 @@ public class SubmissionController {
         return Result.success(docDetail);
     }
 
+    /**
+     * @param id
+     * @param modelName
+     * @param year
+     * @return
+     */
     @GetMapping("/getmodelmaterialinfo")
     public Result<List<MaterialResult>> getModelMaterialInfo(@RequestParam("id") Integer id,
                                                              @RequestParam("modelName") String modelName,
@@ -141,6 +170,13 @@ public class SubmissionController {
         return Result.success(materialResults);
     }
 
+    /**
+     * @param file
+     * @param materialName
+     * @param id
+     * @param modelName
+     * @return 自行封装一个返回类对请求进行统一的值返回
+     */
     @PostMapping("/materialupload")
     public Result upload(@RequestParam("file") MultipartFile file,
                          @RequestParam("materialName") String materialName,
@@ -253,6 +289,10 @@ public class SubmissionController {
         }
     }
 
+    /**
+     * @param materialId
+     * @return 操作消息提醒
+     */
     @DeleteMapping("/deletematerial/{materialId}")
     public AjaxResult removeMaterial(@PathVariable Integer materialId) {
         CompanyPolicySubmissionDocument companyPolicySubmissionDocumentDB = companyPolicySubmissionDocumentService.selectCompanyPolicySubmissionDocumentById(materialId);
@@ -270,6 +310,11 @@ public class SubmissionController {
         return AjaxResult.success("删除成功");
     }
 
+    /**
+     * @param id
+     * @param modelName
+     * @return
+     */
     @GetMapping("/shenbaoprogress")
     public Result<ShenBao> getShenBao(@RequestParam Integer id, @RequestParam String modelName) {
         List<Policy> policies = policyService.selectPolicyByName(modelName);
@@ -286,12 +331,22 @@ public class SubmissionController {
         }
     }
 
+    /**
+     * @param id
+     * @param modelName
+     * @return
+     */
     @GetMapping("/sheheinfo")
     public Result<ShenHe> getShenHe(@RequestParam Integer id, @RequestParam String modelName) {
         ShenHe shenHe = policyLibraryService.getShenHe(id, modelName);
         return Result.success(shenHe);
     }
 
+    /**
+     * @param id
+     * @param modelName
+     * @return
+     */
     @DeleteMapping("/deletecailiao")
     public Result<String> deleteCaiLiao(@RequestParam Integer id, @RequestParam String modelName) {
         List<Policy> policies = policyService.selectPolicyByName(modelName);

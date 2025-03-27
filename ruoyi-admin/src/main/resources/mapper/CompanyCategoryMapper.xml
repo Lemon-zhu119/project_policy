@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyCategoryMapper">
+
+    <resultMap type="CompanyCategory" id="CompanyCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="level"    column="level"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectCompanyCategoryVo">
+        select id, name,level,status from company_category
+    </sql>
+
+    <select id="selectCompanyCategoryList" parameterType="CompanyCategory" resultMap="CompanyCategoryResult">
+        <include refid="selectCompanyCategoryVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="level != null  and level != ''"> and level like concat('%', #{level}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyCategoryById" parameterType="Integer" resultMap="CompanyCategoryResult">
+        <include refid="selectCompanyCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCompanyCategoryListByName" parameterType="String" resultMap="CompanyCategoryResult">
+        <include refid="selectCompanyCategoryVo"/>
+        where name = #{name}
+    </select>
+
+    <select id="selectCompanyCategoryListById" parameterType="Integer" resultMap="CompanyCategoryResult">
+        <include refid="selectCompanyCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCompanyCategory" parameterType="CompanyCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into company_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="level != null">level,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="level != null">#{level},</if>
+            <if test="status != null">status,</if>
+        </trim>
+    </insert>
+
+    <update id="updateCompanyCategory" parameterType="CompanyCategory">
+        update company_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyCategoryById" parameterType="Integer">
+        delete from company_category where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyCategoryByIds" parameterType="Integer">
+        delete from company_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCompanyCategoryByCompanyId" parameterType="Integer" resultType="com.ruoyi.web.controller.company.domain.CompanyCategory">
+        SELECT cc.*
+        FROM company_category cc
+        WHERE NOT EXISTS (
+                SELECT 1
+                FROM company_category_record ccr
+                         JOIN company_category_data ccd ON ccr.category_data_id = ccd.id
+                WHERE ccr.company_id = #{companyId} AND ccd.category_id = cc.id
+            );
+    </select>
+</mapper>

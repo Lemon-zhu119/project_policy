@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.web.controller.api.mapper.PolicyLibraryMapper" >
+    <resultMap id="PolicyLibraryResult" type="PolicyLibrary">
+        <result property="policyN" column="policy_n"/>
+        <result property="userVisitN" column="userVisit_n"/>
+        <result property="companyN" column="company_n"/>
+        <result property="matchN" column="match_n"/>
+        <result property="declarationN" column="declaration_n"/>
+    </resultMap>
+    <resultMap id="userVisitN" type="userVisitN">
+        <result property="userVisitN" column="userVisit_n"/>
+    </resultMap>
+    <resultMap id="ShenHe" type="ShenHe">
+        <result property="materialStatus" column="material_status"/>
+        <result property="submissionStatus" column="submission_status"/>
+        <result property="shenheYijian" column="shenhe_yijian"/>
+    </resultMap>
+    <resultMap id="ShenBao" type="ShenBao">
+        <result property="shenbaoStatus" column="shenbao_status"/>
+        <result property="shenbaoYijian" column="shenbao_yijian"/>
+        <result property="shenheBumen" column="shenhe_bumen"/>
+        <result property="shenheTime" column="shenhe_time"/>
+    </resultMap>
+    <resultMap id="MatchN" type="MatchN">
+        <result property="matchN" column="match_n"/>
+    </resultMap>
+    <update id="updateMatchN" parameterType="MatchN">
+        update policy_library
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="matchN != null">match_n = #{matchN},</if>
+        </trim>
+    </update>
+    <update id="updateUservisitN" parameterType="userVisitN">
+        update policy_library
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userVisitN != null">userVisit_n = #{userVisitN},</if>
+        </trim>
+    </update>
+    <select id="getAll" resultMap="PolicyLibraryResult">
+        SELECT pl.*,b.policy_n,c.company_n FROM policy_library pl
+        JOIN ( SELECT COUNT(*) AS policy_n FROM policy )AS b
+        JOIN (SELECT COUNT(*) AS company_n FROM company)AS c
+    </select>
+    <select id="getMatchN" resultMap="MatchN">
+        SELECT match_n FROM policy_library
+    </select>
+    <select id="getUserVisitN" resultMap="userVisitN">
+        SELECT userVisit_n FROM policy_library
+    </select>
+    <select id="selectShenBao" resultMap="ShenBao">
+        SELECT g.id, g.audit_department shenhe_bumen,g.audit_status shenbao_status,g.audit_advice shenbao_yijian,g.audit_date shenhe_time,cps.*,p.name
+        FROM company_policy_submission cps
+                 join policy p on p.id = cps.policy_id
+                 JOIN government_audit g ON g.submission_id = cps.id
+        where cps.user_id = #{id} and p.name = #{modelName}
+    </select>
+
+    <select id="selectShenHe" resultMap="ShenHe">
+        select material_status,progress_description shenhe_yijian, submission_status from  company_policy_submission
+                                                                                     join policy p on p.id = company_policy_submission.policy_id
+        where user_id = #{id} and p.name = #{modelName}
+    </select>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.GovernmentAuditRecordMapper">
+    <resultMap type="GovernmentAuditRecord" id="GovernmentAuditRecordResult">
+        <result property="id"    column="id"    />
+        <result property="auditId"    column="audit_id"    />
+        <result property="auditDepartment"    column="audit_department"    />
+        <result property="auditStatus"    column="audit_status"    />
+        <result property="auditAdvice"    column="audit_advice"    />
+        <result property="auditDate"    column="audit_date"    />
+    </resultMap>
+
+    <sql id="selectGovernmentAuditRecordVo">
+        select id, audit_id, audit_department, audit_status, audit_advice, audit_date from government_audit_record
+    </sql>
+
+    <select id="selectGovernmentAuditRecordList" parameterType="GovernmentAuditRecord" resultMap="GovernmentAuditRecordResult">
+        <include refid="selectGovernmentAuditRecordVo"/>
+        <where>
+            <if test="auditId != null "> and audit_id = #{auditId}</if>
+            <if test="auditDepartment != null  and auditDepartment != ''"> and audit_department = #{auditDepartment}</if>
+            <if test="auditStatus != null "> and audit_status = #{auditStatus}</if>
+            <if test="auditAdvice != null  and auditAdvice != ''"> and audit_advice = #{auditAdvice}</if>
+            <if test="auditDate != null "> and audit_date = #{auditDate}</if>
+        </where>
+    </select>
+
+    <select id="selectGovernmentAuditRecordById" parameterType="Integer" resultMap="GovernmentAuditRecordResult">
+        <include refid="selectGovernmentAuditRecordVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectGovernmentAuditRecordListByAuditId" resultMap="GovernmentAuditRecordResult">
+        <include refid="selectGovernmentAuditRecordVo"/>
+        where audit_id=#{auditId}
+    </select>
+
+    <insert id="insertGovernmentAuditRecord" parameterType="GovernmentAuditRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into government_audit_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="auditId != null">audit_id,</if>
+            <if test="auditDepartment != null">audit_department,</if>
+            <if test="auditStatus != null">audit_status,</if>
+            <if test="auditAdvice != null">audit_advice,</if>
+            <if test="auditDate != null">audit_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="auditId != null">#{auditId},</if>
+            <if test="auditDepartment != null">#{auditDepartment},</if>
+            <if test="auditStatus != null">#{auditStatus},</if>
+            <if test="auditAdvice != null">#{auditAdvice},</if>
+            <if test="auditDate != null">#{auditDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGovernmentAuditRecord" parameterType="GovernmentAuditRecord">
+        update government_audit_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="auditId != null">audit_id = #{auditId},</if>
+            <if test="auditDepartment != null">audit_department = #{auditDepartment},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="auditAdvice != null">audit_advice = #{auditAdvice},</if>
+            <if test="auditDate != null">audit_date = #{auditDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGovernmentAuditRecordById" parameterType="Integer">
+        delete from government_audit_record where id = #{id}
+    </delete>
+
+    <delete id="deleteGovernmentAuditRecordByIds" parameterType="String">
+        delete from government_audit_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

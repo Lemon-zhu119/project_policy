@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyIndicatorRecordMapper">
+
+    <resultMap type="CompanyIndicatorRecord" id="CompanyIndicatorRecordResult">
+        <result property="id"    column="id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="status"    column="status"    />
+        <result property="dictionaryId"    column="dictionary_id"    />
+        <result property="threshold"    column="threshold"    />
+        <result property="remark" column="remark"/>
+        <result property="year" column="year"/>
+    </resultMap>
+    <sql id="selectCompanyIndicatorRecordVo">
+        select id, company_id, status, dictionary_id, threshold,remark,year from company_indicator_record
+    </sql>
+    <sql id="selectCompanyIndicatorRecordDictionaryVo">
+        select cid.key,cir.threshold,cir.remark from company_indicator_dictionary cid join company_indicator_record cir on cid.id=cir.dictionary_id
+    </sql>
+    <select id="selectCompanyIndicatorRecordListByCompanyId" parameterType="Integer" resultType="companyIndicatorRecordMap">
+        <include refid="selectCompanyIndicatorRecordDictionaryVo"/>
+        where cir.company_id=#{id}
+    </select>
+    <select id="selectCompanyIndicatorRecordList" parameterType="CompanyIndicatorRecord" resultMap="CompanyIndicatorRecordResult">
+        <include refid="selectCompanyIndicatorRecordVo"/>
+        <where>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="dictionaryId != null "> and dictionary_id = #{dictionaryId}</if>
+            <if test="threshold != null  and threshold != ''"> and threshold = #{threshold}</if>
+            <if test="remark != null and remark !=''">and remark = #{remark}</if>
+            <if test="year != null and year !=''">and year = #{year}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyIndicatorRecordById" parameterType="Integer" resultMap="CompanyIndicatorRecordResult">
+        <include refid="selectCompanyIndicatorRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCompanyIndicatorRecordByDicId" parameterType="Integer" resultMap="CompanyIndicatorRecordResult">
+        <include refid="selectCompanyIndicatorRecordVo"/>
+        where dictionary_id = #{id}
+    </select>
+    <select id="selectCompanyIndicatorRecordListByCompanyIdAndYear"
+            resultType="com.ruoyi.web.controller.api.domain.dto.CompanyIndicatorRecordMap">
+        <include refid="selectCompanyIndicatorRecordDictionaryVo"/>
+        where cir.company_id=#{id} and year=#{year}
+    </select>
+    <select id="selectCompanyIndicatorRecordListByCompanyIdAndYearV1"
+            resultMap="CompanyIndicatorRecordResult">
+        <include refid="selectCompanyIndicatorRecordVo"/>
+        where dictionary_id=#{id} and year=#{year}
+    </select>
+
+    <insert id="insertCompanyIndicatorRecord" parameterType="CompanyIndicatorRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into company_indicator_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="status != null">status,</if>
+            <if test="dictionaryId != null">dictionary_id,</if>
+            <if test="threshold != null">threshold,</if>
+            <if test="remark != null">remark,</if>
+            <if test="year !=null">year,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="dictionaryId != null">#{dictionaryId},</if>
+            <if test="threshold != null">#{threshold},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="year != null">#{year},</if>
+        </trim>
+    </insert>
+    <insert id="insertManageLevel">
+        insert into company_indicator_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">company_id,</if>
+            <if test="dictionaryId != null">dictionary_id,</if>
+            <if test="threshold != null">threshold,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyId != null">#{companyId},</if>
+            <if test="dictionaryId != null">#{dictionaryId},</if>
+            <if test="threshold != null">#{threshold},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCompanyIndicatorRecord" parameterType="CompanyIndicatorRecord">
+        update company_indicator_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="dictionaryId != null">dictionary_id = #{dictionaryId},</if>
+            <if test="threshold != null">threshold = #{threshold},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        <if test="year !=null">year=#{year},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateManageLevel">
+        update company_indicator_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="dictionaryId != null">dictionary_id = #{dictionaryId},</if>
+            <if test="threshold != null">threshold = #{threshold},</if>
+            <if test="remark != null">remark=#{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyIndicatorRecordById" parameterType="Integer">
+        delete from company_indicator_record where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyIndicatorRecordByIds" parameterType="String">
+        delete from company_indicator_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyReportMapper">
+    <resultMap id="CompanyReport" type="CompanyReport">
+        <result property="id" column="id"></result>
+        <result property="companyId" column="company_id"></result>
+        <result property="year" column="year"></result>
+        <result property="yanfaTotal" column="yanfa_total"></result>
+        <result property="zichanTotal" column="zichan_total"></result>
+        <result property="xinzenguqTotal" column="xinzenguq_total"></result>
+        <result property="xiaoshouTotal" column="xiaoshou_total"></result>
+        <result property="fuzhaiTotal" column="fuzhai_total"></result>
+        <result property="jinglirunTotal" column="jinglirun_total"></result>
+        <result property="zhuyingTotal" column="zhuying_total"></result>
+        <result property="yinyeshouruTotal" column="yinyeshouru_total"/>
+    </resultMap>
+    <sql id="CompanyReportVO">
+        select
+            id,
+            company_id,
+            year,
+            yinyeshouru_total,
+            yanfa_total,
+            zichan_total,
+            xinzenguq_total,
+            xiaoshou_total,
+            fuzhai_total,
+            jinglirun_total,
+            zhuying_total
+        from company_report
+    </sql>
+    <insert id="insertCompanyReport">
+        insert into company_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="year != null">year,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="yanfaTotal != null">yanfa_total,</if>
+            <if test="zichanTotal != null">zichan_total,</if>
+            <if test="xinzenguqTotal != null">xinzenguq_total,</if>
+            <if test="xiaoshouTotal != null">xiaoshou_total,</if>
+            <if test="fuzhaiTotal != null">fuzhai_total,</if>
+            <if test="jinglirunTotal != null">jinglirun_total,</if>
+            <if test="zhuyingTotal != null">zhuying_total,</if>
+            <if test="yinyeshouruTotal != null">yinyeshouru_total,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="year != null">#{year},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="yanfaTotal != null">#{yanfaTotal},</if>
+            <if test="zichanTotal != null">#{zichanTotal},</if>
+            <if test="xinzenguqTotal != null">#{xinzenguqTotal},</if>
+            <if test="xiaoshouTotal != null">#{xiaoshouTotal},</if>
+            <if test="fuzhaiTotal != null">#{fuzhaiTotal},</if>
+            <if test="jinglirunTotal != null">#{jinglirunTotal},</if>
+            <if test="zhuyingTotal != null">#{zhuyingTotal},</if>
+            <if test="yinyeshouruTotal != null">#{yinyeshouruTotal},</if>
+        </trim>
+    </insert>
+    <update id="updateCompanyReport" parameterType="CompanyReport">
+        update company_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yanfaTotal != null">yanfa_total = #{yanfaTotal},</if>
+            <if test="zichanTotal != null">zichan_total = #{zichanTotal},</if>
+            <if test="xinzenguqTotal != null">xinzenguq_total = #{xinzenguqTotal},</if>
+            <if test="xiaoshouTotal != null">xiaoshou_total = #{xiaoshouTotal},</if>
+            <if test="fuzhaiTotal != null">fuzhai_total = #{fuzhaiTotal},</if>
+            <if test="jinglirunTotal != null">jinglirun_total = #{jinglirunTotal},</if>
+            <if test="zhuyingTotal != null">zhuying_total = #{zhuyingTotal},</if>
+            <if test="yinyeshouruTotal != null">yinyeshouru_total = #{yinyeshouruTotal},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <select id="selectCompanyReportByYear" resultMap="CompanyReport">
+        <include refid="CompanyReportVO"></include>
+        <where>
+            <if test="companyId!=null">and company_id=#{companyId}</if>
+            <if test="year!=null">and year=#{year}</if>
+        </where>
+    </select>
+</mapper>

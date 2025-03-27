@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.GovernmentAuditMapper">
+    <resultMap type="GovernmentAudit" id="GovernmentAuditResult">
+        <result property="id"    column="id"    />
+        <result property="submissionId"    column="submission_id"    />
+        <result property="auditDepartment"    column="audit_department"    />
+        <result property="auditStatus"    column="audit_status"    />
+        <result property="auditAdvice"    column="audit_advice"    />
+        <result property="auditDate"    column="audit_date"    />
+        <result property="auditExpireDate" column="audit_expire_date" />
+    </resultMap>
+
+    <sql id="selectGovernmentAuditVo">
+        select id, submission_id, audit_department, audit_status, audit_advice, audit_date,audit_expire_date from government_audit
+    </sql>
+
+    <select id="selectGovernmentAuditList" parameterType="GovernmentAudit" resultMap="GovernmentAuditResult">
+        <include refid="selectGovernmentAuditVo"/>
+        <where>
+            <if test="submissionId != null "> and submission_id = #{submissionId}</if>
+            <if test="auditDepartment != null  and auditDepartment != ''"> and audit_department = #{auditDepartment}</if>
+            <if test="auditStatus != null "> and audit_status = #{auditStatus}</if>
+            <if test="auditAdvice != null  and auditAdvice != ''"> and audit_advice = #{auditAdvice}</if>
+            <if test="auditDate != null "> and audit_date = #{auditDate}</if>
+            <if test="auditExpireDate !=null">and audit_expire_date=#{auditExpireDate}</if>
+        </where>
+    </select>
+
+    <select id="selectGovernmentAuditById" parameterType="Integer" resultMap="GovernmentAuditResult">
+        <include refid="selectGovernmentAuditVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertGovernmentAudit" parameterType="GovernmentAudit" useGeneratedKeys="true" keyProperty="id">
+        insert into government_audit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="submissionId != null">submission_id,</if>
+            <if test="auditDepartment != null">audit_department,</if>
+            <if test="auditStatus != null">audit_status,</if>
+            <if test="auditAdvice != null">audit_advice,</if>
+            <if test="auditDate != null">audit_date,</if>
+            <if test="auditExpireDate != null">audit_expire_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="submissionId != null">#{submissionId},</if>
+            <if test="auditDepartment != null">#{auditDepartment},</if>
+            <if test="auditStatus != null">#{auditStatus},</if>
+            <if test="auditAdvice != null">#{auditAdvice},</if>
+            <if test="auditDate != null">#{auditDate},</if>
+            <if test="auditExpireDate != null">#{auditExpireDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGovernmentAudit" parameterType="GovernmentAudit">
+        update government_audit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="submissionId != null">submission_id = #{submissionId},</if>
+            <if test="auditDepartment != null">audit_department = #{auditDepartment},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="auditAdvice != null">audit_advice = #{auditAdvice},</if>
+            <if test="auditDate != null">audit_date = #{auditDate},</if>
+            <if test="auditExpireDate != null">audit_expire_date=#{auditExpireDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateGovernmentAuditDelRecord">
+        update government_audit
+        set audit_status=2,
+            audit_advice='',
+            audit_expire_date=null
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGovernmentAuditById" parameterType="Integer">
+        delete from government_audit where id = #{id}
+    </delete>
+
+    <delete id="deleteGovernmentAuditByIds" parameterType="String">
+        delete from government_audit where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.PolicyDetailMapper">
+    <select id="selectPolicyDetailListByPolicyId" parameterType="com.ruoyi.web.controller.policy.domain.dto.PolicyDetail" resultType="com.ruoyi.web.controller.policy.domain.dto.PolicyDetail">
+        SELECT pc.id AS id,pc.name AS NAME,pcd.content AS content,p.id AS policyId,ppd.id as policyPropertiesDataId,pcd.id AS policyCategoryDataId
+        FROM policy_properties_data ppd
+                 JOIN policy p ON ppd.policy_id=p.id
+                 JOIN policy_category_data pcd ON ppd.policy_category_data_id=pcd.id
+                 JOIN policy_category pc ON pcd.policy_category_id=pc.id
+        WHERE p.id = #{id} AND pc.status=1
+    </select>
+    <select id="selectPolicyDetailListExact" parameterType="com.ruoyi.web.controller.policy.domain.dto.PolicyDetail" resultType="com.ruoyi.web.controller.policy.domain.dto.PolicyDetail">
+        SELECT pc.id AS id,pc.name AS NAME,pcd.content AS content,p.id AS policyId
+        FROM policy_properties_data ppd
+                 JOIN policy p ON ppd.policy_id=p.id
+                 JOIN policy_category_data pcd ON ppd.policy_category_data_id=pcd.id
+                 JOIN policy_category pc ON pcd.policy_category_id=pc.id
+        WHERE p.id = #{policyId} AND pc.status=1 AND pc.name=#{name}
+    </select>
+</mapper>

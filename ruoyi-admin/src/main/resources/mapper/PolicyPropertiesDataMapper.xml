@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.PolicyPropertiesDataMapper">
+
+    <resultMap type="PolicyPropertiesData" id="PolicyPropertiesDataResult">
+        <result property="id"    column="id"    />
+        <result property="policyId"    column="policy_id"    />
+        <result property="policyCategoryDataId"    column="policy_category_data_id"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPolicyPropertiesDataVo">
+        select id, policy_id, policy_category_data_id, status from policy_properties_data
+    </sql>
+
+    <select id="selectPolicyPropertiesDataList" parameterType="PolicyPropertiesData" resultMap="PolicyPropertiesDataResult">
+        <include refid="selectPolicyPropertiesDataVo"/>
+        <where>
+            <if test="policyId != null "> and policy_id = #{policyId}</if>
+            <if test="policyCategoryDataId != null "> and policy_category_data_id = #{policyCategoryDataId}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPolicyPropertiesDataById" parameterType="Integer" resultMap="PolicyPropertiesDataResult">
+        <include refid="selectPolicyPropertiesDataVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPolicyPropertiesDataByPolicyId" parameterType="Integer" resultMap="PolicyPropertiesDataResult">
+        <include refid="selectPolicyPropertiesDataVo"/>
+        where policy_id = #{id}
+    </select>
+
+    <select id="selectPolicyPropertiesDataByCategoryDataId" parameterType="Integer" resultMap="PolicyPropertiesDataResult">
+        <include refid="selectPolicyPropertiesDataVo"/>
+        where policy_category_data_id = #{policyCategoryDataId}
+    </select>
+    <select id="selectOtherPolicyPropertiesDataByCategoryDataByCategoryId"
+            resultType="com.ruoyi.web.controller.policy.domain.PolicyPropertiesData">
+        select ppd.* from policy
+            left join policy_properties_data ppd on policy.id = ppd.policy_id
+            left join policy_category_data pcd on ppd.policy_category_data_id = pcd.id
+    </select>
+
+    <insert id="insertPolicyPropertiesData" parameterType="PolicyPropertiesData" useGeneratedKeys="true" keyProperty="id">
+        insert into policy_properties_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="policyId != null">policy_id,</if>
+            <if test="policyCategoryDataId != null">policy_category_data_id,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="policyId != null">#{policyId},</if>
+            <if test="policyCategoryDataId != null">#{policyCategoryDataId},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePolicyPropertiesData" parameterType="PolicyPropertiesData">
+        update policy_properties_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="policyId != null">policy_id = #{policyId},</if>
+            <if test="policyCategoryDataId != null">policy_category_data_id = #{policyCategoryDataId},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePolicyPropertiesDataById" parameterType="Integer">
+        delete from policy_properties_data where id = #{id}
+    </delete>
+
+    <delete id="deletePolicyPropertiesDataByIds" parameterType="String">
+        delete from policy_properties_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

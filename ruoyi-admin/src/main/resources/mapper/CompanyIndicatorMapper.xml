@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyIndicatorMapper">
+
+    <resultMap type="CompanyIndicator" id="CompanyIndicatorResult">
+        <result property="id"    column="id"    />
+        <result property="dictionaryId"    column="dictionary_id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="name"    column="name"    />
+        <result property="key"    column="key"    />
+        <result property="threshold"    column="threshold"    />
+    </resultMap>
+
+
+    <select id="selectCompanyIndicatorListByCompanyId" parameterType="Integer" resultMap="CompanyIndicatorResult">
+        SELECT cir.id AS id,cid.name AS `name`,cid.`key` AS `key`,cir.`threshold` AS threshold
+        FROM company c JOIN company_indicator_record cir ON c.`id`=cir.`company_id`
+        JOIN company_indicator_dictionary cid ON cir.`dictionary_id`=cid.`id`
+        <where>
+            <if test="companyId != null"> and c.id = #{companyId}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyIndicatorListById" parameterType="Integer" resultMap="CompanyIndicatorResult">
+        SELECT cir.id AS id,cid.name AS `name`,cid.`key` AS `key`,cir.`threshold` AS threshold
+        FROM company c JOIN company_indicator_record cir ON c.`id`=cir.`company_id`
+        JOIN company_indicator_dictionary cid ON cir.`dictionary_id`=cid.`id`
+        <where>
+            <if test="companyId != null"> and cir.id = #{id}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyIndicatorList" parameterType="CompanyIndicator" resultMap="CompanyIndicatorResult">
+        SELECT cir.id AS id,cid.name AS `name`,cid.`key` AS `key`,cir.`threshold` AS threshold
+        FROM company c JOIN company_indicator_record cir ON c.`id`=cir.`company_id`
+        JOIN company_indicator_dictionary cid ON cir.`dictionary_id`=cid.`id`
+        <where>
+            <if test="name != null"> and name = #{name}</if>
+        </where>
+    </select>
+
+    <select id="selectIndicatorListExact" parameterType="com.ruoyi.web.controller.company.domain.dto.CompanyIndicator" resultType="com.ruoyi.web.controller.company.domain.dto.CompanyIndicator">
+        SELECT cir.id AS id,cid.name AS `name`,cid.`key` AS `key`,cir.`threshold` AS threshold
+        FROM company c JOIN company_indicator_record cir ON c.`id`=cir.`company_id`
+                       JOIN company_indicator_dictionary cid ON cir.`dictionary_id`=cid.`id`
+        WHERE c.id = #{companyId} AND cid.name=#{name}
+    </select>
+
+
+    <select id="selectCompanyIndicatorListByPolicy" parameterType="Integer" resultMap="CompanyIndicatorResult">
+        SELECT cir.id AS id,cid.name AS `name`,cid.`key` AS `key`,cir.`threshold` AS threshold
+        FROM company c JOIN company_indicator_record cir ON c.`id`=cir.`company_id`
+        JOIN company_indicator_dictionary cid ON cir.`dictionary_id`=cid.`id`
+        <where>
+            <if test="name != null"> and name = #{name}</if>
+        </where>
+    </select>
+</mapper>

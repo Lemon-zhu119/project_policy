@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.web.controller.api.mapper.EntNatureDateMapper">
+    <select id="getAll" resultType="com.ruoyi.web.controller.api.domain.EntNatureDate">
+        SELECT
+            content AS VALUE,
+            content AS label
+        FROM (
+                 SELECT DISTINCT content FROM company_category_data ccd
+                 WHERE category_id IN (
+                     SELECT id FROM company_category WHERE NAME =
+                                                           '行业')
+             ) AS distinct_data;
+    </select>
+</mapper>

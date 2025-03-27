@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.PolicyCategoryDataMapper">
+
+    <resultMap type="PolicyCategoryData" id="PolicyCategoryDataResult">
+        <result property="id"    column="id"    />
+        <result property="policyCategoryId"    column="policy_category_id"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPolicyCategoryDataVo">
+        select id, policy_category_id, content, status from policy_category_data
+    </sql>
+
+    <select id="selectPolicyCategoryDataList" parameterType="PolicyCategoryData" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        <where>
+            <if test="policyCategoryId != null "> and policy_category_id = #{policyCategoryId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPolicyCategoryDataById" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPolicyCategoryDataListById" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPolicyCategoryData" parameterType="PolicyCategoryData" useGeneratedKeys="true" keyProperty="id">
+        insert into policy_category_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="policyCategoryId != null">policy_category_id,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="policyCategoryId != null">#{policyCategoryId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePolicyCategoryData" parameterType="PolicyCategoryData">
+        update policy_category_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="policyCategoryId != null">policy_category_id = #{policyCategoryId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updatePolicyCategoryDataByCategoryId" parameterType="PolicyCategoryData">
+        update policy_category_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="policyCategoryId != null">policy_category_id = #{policyCategoryId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where policy_category_id = #{policyCategoryId}
+    </update>
+
+    <delete id="deletePolicyCategoryDataById" parameterType="Integer">
+        delete from policy_category_data where id = #{id}
+    </delete>
+
+    <delete id="deletePolicyCategoryDataByIds" parameterType="Integer">
+        delete from policy_category_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deletePolicyCategoryDataByCategoryId">
+        delete from policy_category_data where policy_category_id=#{categoryId}
+    </delete>
+
+    <select id="selectPolicyCategoryDataListByCategoryId" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where policy_category_id = #{id}
+    </select>
+</mapper>

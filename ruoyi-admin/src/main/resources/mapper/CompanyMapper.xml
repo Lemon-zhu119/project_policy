@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyMapper">
+
+    <resultMap type="Company" id="CompanyResult">
+        <result property="id"    column="id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="legalPerson"    column="legal_person"    />
+        <result property="address"    column="address"    />
+        <result property="USCC"    column="USCC"    />
+        <result property="companyType"    column="company_type"    />
+        <result property="reqAuthority"    column="req_authority"    />
+        <result property="establishDate"    column="establish_date"    />
+        <result property="businessScope"    column="business_scope"    />
+        <result property="cTaxAuthority"    column="c_tax_authority"    />
+        <result property="phone"    column="phone"    />
+        <result property="bLicenseUrl"    column="b_license_url"    />
+        <result property="detailAdd"    column="detail_add"    />
+        <result property="entBelongs"    column="ent_belongs"    />
+        <result property="entNature"    column="ent_nature"    />
+        <result property="oneClass"    column="one_class"    />
+        <result property="twoClass"    column="two_class"    />
+        <result property="oneSelfClass"    column="one_self_class"    />
+        <result property="oneValueClass"    column="one_value_class"    />
+        <result property="digitalCulLevel"    column="digital_cul_level"    />
+        <result property="entDetailMarket"    column="ent_detail_market"    />
+        <result property="entDetailYear"    column="ent_detail_year"    />
+        <result property="openid"    column="openid"    />
+    </resultMap>
+
+    <sql id="selectCompanyVo">
+        select * from company
+    </sql>
+
+    <select id="selectCompanyList" parameterType="Company" resultMap="CompanyResult">
+        <include refid="selectCompanyVo"/>
+        <where>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="legalPerson != null  and legalPerson != ''"> and legal_person = #{legalPerson}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyByName" resultMap="CompanyResult">
+        SELECT * FROM company
+        WHERE company_name=#{companyName}
+    </select>
+
+    <select id="selectCompanyByOpenid" resultMap="CompanyResult">
+        SELECT * FROM company
+        WHERE openid=#{openid}
+    </select>
+
+    <select id="selectCompanyListById" parameterType="Integer" resultMap="CompanyResult">
+        <include refid="selectCompanyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCompany" parameterType="Company">
+        insert into company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="companyName != null">company_name,</if>
+            <if test="legalPerson != null">legal_person,</if>
+            <if test="address != null">address,</if>
+            <if test="USCC != null">USCC,</if>
+            <if test="companyType != null">company_type,</if>
+            <if test="reqAuthority != null">req_authority,</if>
+            <if test="establishDate != null">establish_date,</if>
+            <if test="businessScope != null">business_scope,</if>
+            <if test="cTaxAuthority != null">c_tax_authority,</if>
+            <if test="phone != null">phone,</if>
+            <if test="bLicenseUrl != null">b_license_url,</if>
+            <if test="detailAdd != null">detail_add,</if>
+            <if test="entBelongs != null">ent_belongs,</if>
+            <if test="entNature != null">ent_nature,</if>
+            <if test="oneClass != null">one_class,</if>
+            <if test="twoClass != null">two_class,</if>
+            <if test="oneSelfClass != null">one_self_class,</if>
+            <if test="oneValueClass != null">one_value_class,</if>
+            <if test="digitalCulLevel != null">digital_cul_level,</if>
+            <if test="entDetailMarket != null">ent_detail_market,</if>
+            <if test="entDetailYear != null">ent_detail_year,</if>
+            <if test="openid != null">openid,</if>
+            <if test="sysUserId != null">sys_user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="companyName != null">#{companyName},</if>
+            <if test="legalPerson != null">#{legalPerson},</if>
+            <if test="address != null">#{address},</if>
+            <if test="USCC != null">#{USCC},</if>
+            <if test="companyType != null">#{companyType},</if>
+            <if test="reqAuthority != null">#{reqAuthority},</if>
+            <if test="establishDate != null">#{establishDate},</if>
+            <if test="businessScope != null">#{businessScope},</if>
+            <if test="cTaxAuthority != null">#{cTaxAuthority},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="bLicenseUrl != null">#{bLicenseUrl},</if>
+            <if test="detailAdd != null">#{detailAdd},</if>
+            <if test="entBelongs != null">#{entBelongs},</if>
+            <if test="entNature != null">#{entNature},</if>
+            <if test="oneClass != null">#{oneClass},</if>
+            <if test="twoClass != null">#{twoClass},</if>
+            <if test="oneSelfClass != null">#{oneSelfClass},</if>
+            <if test="oneValueClass != null">#{oneValueClass},</if>
+            <if test="digitalCulLevel != null">#{digitalCulLevel},</if>
+            <if test="entDetailMarket != null">#{entDetailMarket},</if>
+            <if test="entDetailYear != null">#{entDetailYear},</if>
+            <if test="openid != null">#{openid},</if>
+            <if test="sysUserId != null">#{sysUserId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCompany" parameterType="Company">
+        update company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null">company_name = #{companyName},</if>
+            <if test="legalPerson != null">legal_person = #{legalPerson},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="USCC != null">USCC=#{USCC},</if>
+            <if test="companyType != null">company_type=#{companyType},</if>
+            <if test="reqAuthority != null">req_authority=#{reqAuthority},</if>
+            <if test="establishDate != null">establish_date=#{establishDate},</if>
+            <if test="businessScope != null">business_scope=#{businessScope},</if>
+            <if test="cTaxAuthority != null">c_tax_authority=#{cTaxAuthority},</if>
+            <if test="phone != null">phone=#{phone},</if>
+            <if test="bLicenseUrl != null">b_license_url=#{bLicenseUrl},</if>
+            <if test="detailAdd != null">detail_add=#{detailAdd},</if>
+            <if test="entBelongs != null">ent_belongs=#{entBelongs},</if>
+            <if test="entNature != null">ent_nature=#{entNature},</if>
+            <if test="oneClass != null">one_class=#{oneClass},</if>
+            <if test="twoClass != null">two_class=#{twoClass},</if>
+            <if test="oneSelfClass != null">one_self_class=#{oneSelfClass},</if>
+            <if test="oneValueClass != null">one_value_class=#{oneValueClass},</if>
+            <if test="digitalCulLevel != null">digital_cul_level=#{digitalCulLevel},</if>
+            <if test="entDetailMarket != null">ent_detail_market=#{entDetailMarket},</if>
+            <if test="entDetailYear != null">ent_detail_year=#{entDetailYear},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyById" parameterType="Integer">
+        delete from company where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyByIds" parameterType="Integer">
+        delete from company where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

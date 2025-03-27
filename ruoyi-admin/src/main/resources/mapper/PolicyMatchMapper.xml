@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.web.controller.api.mapper.PolicyMatchMapper">
+    <resultMap id="PolicyMatch" type="PolicyMatch">
+        <result property="modelName" column="model_name"></result>
+    </resultMap>
+    <select id="getAll" resultMap="PolicyMatch">
+        select id,name as model_name,money,
+               CONCAT(DATE_FORMAT(publish_date, '%Y-%m-%d'),
+                   '至',DATE_FORMAT(IFNULL(expire_date, CONCAT(YEAR(CURDATE())+1, '-1-1')), '%Y-%m-%d')) AS periodtime,
+            source from policy
+                                where is_custom=1
+    </select>
+</mapper>

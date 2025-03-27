@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.web.controller.api.mapper.MaterialMapper" >
+
+    <resultMap type="Material" id="MaterialResult">
+        <result property="clId"    column="clId"    />
+        <result property="modelName"    column="company_name"    />
+        <result property="policyStatus"    column="policyStatus"    />
+    </resultMap>
+    <select id="getMaterial" resultType="com.ruoyi.web.controller.api.domain.Material">
+        select cpsd.id as clId,policy.name as modelName,cpsd.name as policyStatus from company_policy_submission_document cpsd
+                                                                                           left join company_policy_submission cps on cps.id=cpsd.submission_id
+                                                                                           left join company on company.id=cps.user_id
+                                                                                           left join policy on cps.policy_id = policy.id
+    </select>
+</mapper>

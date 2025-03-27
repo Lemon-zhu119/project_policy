@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyIndicatorDictionaryMapper">
+
+    <resultMap type="CompanyIndicatorDictionary" id="CompanyIndicatorDictionaryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="key"    column="key"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectCompanyIndicatorDictionaryVo">
+        select id, name, `key`, status from company_indicator_dictionary
+    </sql>
+
+    <select id="selectCompanyIndicatorDictionaryList" parameterType="CompanyIndicatorDictionary" resultMap="CompanyIndicatorDictionaryResult">
+        <include refid="selectCompanyIndicatorDictionaryVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="key != null  and key != ''"> and `key` = #{key}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyIndicatorDictionaryById" parameterType="Integer" resultMap="CompanyIndicatorDictionaryResult">
+        <include refid="selectCompanyIndicatorDictionaryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCompanyIndicatorDictionaryByName" parameterType="String" resultMap="CompanyIndicatorDictionaryResult">
+        <include refid="selectCompanyIndicatorDictionaryVo"/>
+        where name = #{name}
+    </select>
+
+    <insert id="insertCompanyIndicatorDictionary" parameterType="CompanyIndicatorDictionary" useGeneratedKeys="true" keyProperty="id">
+        insert into company_indicator_dictionary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="key != null and key != ''">`key`,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="key != null and key != ''">#{key},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCompanyIndicatorDictionary" parameterType="CompanyIndicatorDictionary">
+        update company_indicator_dictionary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="key != null and key != ''">`key` = #{key},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyIndicatorDictionaryById" parameterType="Integer">
+        delete from company_indicator_dictionary where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyIndicatorDictionaryByIds" parameterType="String">
+        delete from company_indicator_dictionary where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCompanyIndicatorDictionaryListDistinct" parameterType="Integer" resultMap="CompanyIndicatorDictionaryResult">
+        SELECT *
+        FROM company_indicator_dictionary cid
+        WHERE NOT EXISTS (
+        SELECT 1
+        FROM policy_model_indicator_record pmir
+        WHERE pmir.indicator_dictionary_id = cid.id
+        AND pmir.policy_id = #{id}
+        );
+    </select>
+
+    <select id="selectCompanyIndicatorDictionaryByCompanyId" parameterType="Integer" resultMap="CompanyIndicatorDictionaryResult">
+        SELECT cid.*
+        FROM company_indicator_dictionary cid
+        WHERE NOT EXISTS (
+                SELECT 1
+                FROM company_indicator_record cir
+                WHERE cir.company_id = #{companyId} AND cir.dictionary_id = cid.id
+            );
+    </select>
+    <select id="selectCompanyIndicatorDictionaryByKey" resultType="java.lang.Object">
+        select * from company_indicator_dictionary where `key`=#{key}
+    </select>
+</mapper>

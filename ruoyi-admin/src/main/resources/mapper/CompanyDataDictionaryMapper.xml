@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.enterpriseData.dataInspect.mapper.CompanyDataDictionaryMapper">
+
+    <resultMap type="CompanyDataDictionary" id="CompanyDataDictionaryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="categoryId"    column="category_id"    />
+    </resultMap>
+
+    <sql id="selectCompanyDataDictionaryVo">
+        select id, name, category_id from company_indicator_dictionary
+    </sql>
+
+    <select id="selectCompanyDataDictionaryList" parameterType="CompanyDataDictionary" resultMap="CompanyDataDictionaryResult">
+        <include refid="selectCompanyDataDictionaryVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyDataDictionaryById" parameterType="String" resultMap="CompanyDataDictionaryResult">
+        <include refid="selectCompanyDataDictionaryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCompanyDataDictionary" parameterType="CompanyDataDictionary" useGeneratedKeys="true" keyProperty="id">
+        insert into company_indicator_dictionary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="categoryId != null">category_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCompanyDataDictionary" parameterType="CompanyDataDictionary">
+        update company_indicator_dictionary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyDataDictionaryById" parameterType="String">
+        delete from company_indicator_dictionary where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyDataDictionaryByIds" parameterType="String">
+        delete from company_indicator_dictionary where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

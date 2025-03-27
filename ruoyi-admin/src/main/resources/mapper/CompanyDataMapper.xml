@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.enterpriseData.dataInspect.mapper.CompanyDataMapper">
+
+    <resultMap type="CompanyData" id="CompanyDataResult">
+        <result property="id"    column="id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="legalPerson"    column="legal_person"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="projectContent"    column="project_content"    />
+    </resultMap>
+
+    <sql id="selectCompanyDataVo">
+        select id, company_name, legal_person, project_name, project_content from company_data
+    </sql>
+
+    <select id="selectCompanyDataList" parameterType="CompanyData" resultMap="CompanyDataResult">
+        <include refid="selectCompanyDataVo"/>
+        <where>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="legalPerson != null  and legalPerson != ''"> and legal_person = #{legalPerson}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="projectContent != null  and projectContent != ''"> and project_content = #{projectContent}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyDataById" parameterType="Long" resultMap="CompanyDataResult">
+        <include refid="selectCompanyDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCompanyData" parameterType="CompanyData">
+        insert into company_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="companyName != null">company_name,</if>
+            <if test="legalPerson != null">legal_person,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="projectContent != null">project_content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="companyName != null">#{companyName},</if>
+            <if test="legalPerson != null">#{legalPerson},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="projectContent != null">#{projectContent},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCompanyData" parameterType="CompanyData">
+        update company_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null">company_name = #{companyName},</if>
+            <if test="legalPerson != null">legal_person = #{legalPerson},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="projectContent != null">project_content = #{projectContent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyDataById" parameterType="Long">
+        delete from company_data where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyDataByIds" parameterType="String">
+        delete from company_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

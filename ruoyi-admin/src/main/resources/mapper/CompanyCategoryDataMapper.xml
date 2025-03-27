@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyCategoryDataMapper">
+
+    <resultMap type="CompanyCategoryData" id="CompanyCategoryDataResult">
+        <result property="id"    column="id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectCompanyCategoryDataVo">
+        select id, content,category_id ,status from company_category_data
+    </sql>
+
+    <select id="selectCompanyCategoryDataList" parameterType="CompanyCategoryData" resultMap="CompanyCategoryDataResult">
+        <include refid="selectCompanyCategoryDataVo"/>
+        <where>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyCategoryDataById" parameterType="Integer" resultMap="CompanyCategoryDataResult">
+        <include refid="selectCompanyCategoryDataVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCompanyCategoryDataListByCategoryId" parameterType="Integer" resultMap="CompanyCategoryDataResult">
+        <include refid="selectCompanyCategoryDataVo"/>
+        where category_id = #{id}
+    </select>
+
+    <select id="selectCompanyCategoryDataListById" parameterType="Integer" resultMap="CompanyCategoryDataResult">
+        <include refid="selectCompanyCategoryDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCompanyCategoryData" parameterType="CompanyCategoryData" useGeneratedKeys="true" keyProperty="id">
+        insert into company_category_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">category_id,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">status,</if>
+        </trim>
+    </insert>
+
+    <update id="updateCompanyCategoryData" parameterType="CompanyCategoryData">
+        update company_category_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyCategoryDataById" parameterType="Integer">
+        delete from company_category_data where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyCategoryDataByCategoryId" parameterType="Integer">
+        delete from company_category_data where category_id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyCategoryDataByIds" parameterType="Integer">
+        delete from company_category_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

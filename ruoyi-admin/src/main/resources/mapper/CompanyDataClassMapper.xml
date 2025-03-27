@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.company.mapper.CompanyDataClassMapper">
+
+    <select id="selectCompanyDataClassList" parameterType="com.ruoyi.web.controller.company.domain.dto.CompanyDataClass" resultType="com.ruoyi.web.controller.company.domain.dto.CompanyDataClass">
+        SELECT d.id AS id,
+        d.category_id AS categoryId,
+        d.content,
+        d.status AS status,
+        c.status AS categoryStatus,
+        c.name AS name,
+        c.level AS level
+        FROM company_category c JOIN company_category_data d on c.id = d.category_id
+        <where>
+            <if test="content!=null and content!=''">
+                and d.content LIKE CONCAT('%',#{content},'%')
+            </if>
+            <if test="name!=null and name!=''">
+                and c.name LIKE CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCompanyDataClassById" parameterType="Integer" resultType="com.ruoyi.web.controller.company.domain.dto.CompanyDataClass">
+        SELECT d.id AS id,
+               d.category_id AS categoryId,
+               d.content,
+               d.status AS status,
+               c.status AS categoryStatus,
+               c.name,
+               c.level
+        FROM company_category c JOIN company_category_data d on c.id = d.category_id
+        WHERE d.id = #{id}
+    </select>
+
+</mapper>

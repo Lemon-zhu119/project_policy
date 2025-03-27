@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.submission.mapper.CompanyPolicySubmissionMapper">
+
+    <resultMap type="CompanyPolicySubmission" id="CompanyPolicySubmissionResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="policyId"    column="policy_id"    />
+        <result property="materialStatus"    column="material_status"    />
+        <result property="date"    column="date"    />
+        <result property="progressDescription"    column="progress_description"    />
+        <result property="submissionStatus"    column="submission_status"    />
+    </resultMap>
+
+    <resultMap type="CompanyPolicySubmissionDto" id="CompanyPolicySubmissionDtoResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="policyId"    column="policy_id"    />
+        <result property="materialStatus"    column="material_status"    />
+        <result property="date"    column="date"    />
+        <result property="progressDescription"    column="progress_description"    />
+        <result property="submissionStatus"    column="submission_status"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="policyName"    column="name"    />
+    </resultMap>
+
+
+    <sql id="selectCompanyPolicySubmissionVo">
+        select id, user_id, policy_id, material_status, date, progress_description, submission_status from company_policy_submission
+    </sql>
+
+    <select id="selectCompanyPolicySubmissionList" parameterType="CompanyPolicySubmission" resultMap="CompanyPolicySubmissionResult">
+        <include refid="selectCompanyPolicySubmissionVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="policyId != null "> and policy_id = #{policyId}</if>
+            <if test="materialStatus != null  and materialStatus != ''"> and material_status = #{materialStatus}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="progressDescription != null  and progressDescription != ''"> and progress_description = #{progressDescription}</if>
+            <if test="submissionStatus != null  and submissionStatus != ''"> and submission_status = #{submissionStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectCompanyPolicySubmissionById" parameterType="Integer" resultMap="CompanyPolicySubmissionResult">
+        <include refid="selectCompanyPolicySubmissionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCompanyPolicySubmission" parameterType="CompanyPolicySubmission" useGeneratedKeys="true" keyProperty="id">
+        insert into company_policy_submission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="policyId != null">policy_id,</if>
+            <if test="materialStatus != null">material_status,</if>
+            <if test="date != null">date,</if>
+            <if test="progressDescription != null">progress_description,</if>
+            <if test="submissionStatus != null">submission_status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="policyId != null">#{policyId},</if>
+            <if test="materialStatus != null">#{materialStatus},</if>
+            <if test="date != null">#{date},</if>
+            <if test="progressDescription != null">#{progressDescription},</if>
+            <if test="submissionStatus != null">#{submissionStatus},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCompanyPolicySubmission" parameterType="CompanyPolicySubmissionDto">
+        update company_policy_submission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="policyId != null">policy_id = #{policyId},</if>
+            <if test="materialStatus != null">material_status = #{materialStatus},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="progressDescription != null">progress_description = #{progressDescription},</if>
+            <if test="submissionStatus != null">submission_status = #{submissionStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCompanyPolicySubmissionById" parameterType="Integer">
+        delete from company_policy_submission where id = #{id}
+    </delete>
+
+    <delete id="deleteCompanyPolicySubmissionByIds" parameterType="String">
+        delete from company_policy_submission where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCompanyPolicySubmissionDto" resultMap="CompanyPolicySubmissionDtoResult">
+        SELECT cps.*,c.company_name AS company_name,p.name AS name
+        FROM company c
+                 JOIN company_policy_submission cps ON cps.`user_id` = c.`id`
+                 JOIN policy p ON p.`id` = cps.`policy_id`
+    </select>
+</mapper>

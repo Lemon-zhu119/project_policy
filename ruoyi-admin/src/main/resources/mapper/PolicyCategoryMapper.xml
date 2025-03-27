@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.PolicyCategoryMapper">
+
+    <resultMap type="PolicyCategory" id="PolicyCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="eName"    column="e_name"/>
+    </resultMap>
+
+    <sql id="selectPolicyCategoryVo">
+        select id, name, status,e_name from policy_category
+    </sql>
+
+    <select id="selectPolicyCategoryList" parameterType="PolicyCategory" resultMap="PolicyCategoryResult">
+        <include refid="selectPolicyCategoryVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPolicyCategoryListExact" parameterType="PolicyCategory" resultMap="PolicyCategoryResult">
+        <include refid="selectPolicyCategoryVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPolicyCategoryById" parameterType="Integer" resultMap="PolicyCategoryResult">
+        <include refid="selectPolicyCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPolicyCategoryByName" parameterType="String" resultMap="PolicyCategoryResult">
+        <include refid="selectPolicyCategoryVo"/>
+        where name = #{name}
+    </select>
+
+    <select id="selectPolicyCategoryListById" parameterType="Integer" resultMap="PolicyCategoryResult">
+        <include refid="selectPolicyCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPolicyCategory" parameterType="PolicyCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into policy_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePolicyCategory" parameterType="PolicyCategory">
+        update policy_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePolicyCategoryById" parameterType="Integer">
+        delete from policy_category where id = #{id}
+    </delete>
+
+    <delete id="deletePolicyCategoryByIds" parameterType="Integer">
+        delete from policy_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCategoryListByPolicyId" parameterType="Integer" resultMap="PolicyCategoryResult">
+        SELECT pc.*
+        FROM policy_category pc
+        WHERE NOT EXISTS (
+                SELECT 1
+                FROM policy_properties_data ppd
+                         JOIN policy_category_data pcd ON ppd.policy_category_data_id = pcd.`id`
+                WHERE ppd.`policy_id` = #{policyId} AND pcd.`policy_category_id` = pc.id
+            );
+    </select>
+    <select id="selectPolicyCategoryListByName"
+            resultType="com.ruoyi.web.controller.policy.domain.PolicyCategory">
+        <include refid="selectPolicyCategoryVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name=#{name}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+</mapper>

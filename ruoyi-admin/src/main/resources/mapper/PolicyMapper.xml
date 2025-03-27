@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.PolicyMapper">
+
+    <resultMap type="Policy" id="PolicyResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="expireDate"    column="expire_date"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="content"    column="content"    />
+        <result property="formula"    column="formula"    />
+        <result property="phone"    column="phone"    />
+        <result property="contact"    column="contact"    />
+        <result property="isMoney"    column="is_money"    />
+        <result property="recLevel"    column="rec_level"    />
+        <result property="hotLevel"    column="hot_level"    />
+        <result property="money" column="money"/>
+        <result property="source" column="source"/>
+        <result property="fileUrl" column="file_url"/>
+        <result property="policyObject" column="policy_object"/>
+        <result property="isCustom" column="is_custom"/>
+        <result property="docNumber" column="doc_number"/>
+        <result property="docDetail" column="doc_detail"/>
+        <result property="policyCondition" column="policy_condition"/>
+        <result property="policyDocDetail" column="policy_doc_detail"/>
+    </resultMap>
+
+    <resultMap id="PolicyModelResult" type="PolicyModel">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="key"    column="key"    />
+        <result property="policyId"    column="policy_id"    />
+        <result property="indicatorDictionaryId"    column="indicator_dictionary_id"    />
+        <result property="operator"    column="operator"    />
+        <result property="threshold"    column="threshold"    />
+        <result property="formula"    column="formula"    />
+        <result property="complexFormula"    column="complex_formula"    />
+    </resultMap>
+
+    <sql id="selectPolicyVo">
+        select id,
+               name,
+               publish_date,
+               expire_date,
+               description,
+               status,
+               content,
+               formula,
+               phone,
+               contact,
+               is_money,
+               rec_level,
+               hot_level,
+               money,
+               source,
+               file_url,
+               policy_object,
+               is_custom,
+               doc_number,
+               doc_detail,
+               policy_condition,
+               policy_doc_detail
+        from policy
+    </sql>
+
+    <select id="selectPolicyList" parameterType="Policy" resultMap="PolicyResult">
+        <include refid="selectPolicyVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="publishDate != null "> and publish_date = #{publishDate}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            and is_custom is null
+        </where>
+    </select>
+    <select id="selectCustomPolicyList" parameterType="Policy" resultMap="PolicyResult">
+        <include refid="selectPolicyVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="publishDate != null ">and publish_date = #{publishDate}</if>
+            <if test="description != null  and description != ''">and description = #{description}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            and is_custom=1
+        </where>
+    </select>
+
+    <select id="selectPolicyById" parameterType="Integer" resultMap="PolicyResult">
+        <include refid="selectPolicyVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPolicyListById" parameterType="Integer" resultMap="PolicyResult">
+        <include refid="selectPolicyVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPolicyByName" parameterType="String" resultMap="PolicyResult">
+        <include refid="selectPolicyVo"/>
+        where name = #{policyName}
+    </select>
+
+    <insert id="insertPolicy" parameterType="Policy" useGeneratedKeys="true" keyProperty="id">
+        insert into policy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="publishDate != null">publish_date,</if>
+            <if test="expireDate != null">expire_date,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="content != null">content,</if>
+            <if test="formula != null">formula,</if>
+            <if test="phone != null">phone,</if>
+            <if test="contact != null">contact,</if>
+            <if test="isMoney != null">isMoney,</if>
+            <if test="recLevel != null">recLevel,</if>
+            <if test="hotLevel != null">hotLevel,</if>
+            <if test="source !=null">source,</if>
+            <if test="policyObject !=null">policy_object,</if>
+            <if test="policyCondition !=null">policy_condition,</if>
+            <if test="policyDocDetail !=null">policy_doc_detail,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="publishDate != null">#{publishDate},</if>
+            <if test="expireDate != null">#{expireDate},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="content != null">#{content},</if>
+            <if test="formula != null">#{formula},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="contact != null">#{contact},</if>
+            <if test="isMoney != null">#{isMoney},</if>
+            <if test="recLevel != null">#{recLevel},</if>
+            <if test="hotLevel != null">#{hotLevel},</if>
+            <if test="source !=null">#{source},</if>
+            <if test="policyObject !=null">#{policyObject},</if>
+            <if test="policyCondition !=null">#{policyCondition},</if>
+            <if test="policyDocDetail !=null">#{policyDocDetail},</if>
+        </trim>
+    </insert>
+    <insert id="insertPolicyModel" parameterType="Policy" useGeneratedKeys="true" keyProperty="id">
+        insert into policy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="publishDate != null">publish_date,</if>
+            <if test="expireDate != null">expire_date,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="content != null">content,</if>
+            <if test="formula != null">formula,</if>
+            <if test="phone != null">phone,</if>
+            <if test="contact != null">contact,</if>
+            <if test="isMoney != null">isMoney,</if>
+            <if test="recLevel != null">recLevel,</if>
+            <if test="hotLevel != null">hotLevel,</if>
+            <if test="money !=null">money,</if>
+            <if test="source !=null">source,</if>
+            <if test="fileUrl !=null">fileUrl,</if>
+            <if test="policyObject !=null">policy_object,</if>
+            <if test="policyCondition !=null">policy_condition,</if>
+            <if test="policyDocDetail !=null">policy_doc_detail,</if>
+            is_custom,
+            <if test="docNumber!=null">doc_number,</if>
+            <if test="docDetail!=null">doc_detail,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="publishDate != null">#{publishDate},</if>
+            <if test="expireDate != null">#{expireDate},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="content != null">#{content},</if>
+            <if test="formula != null">#{formula},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="contact != null">#{contact},</if>
+            <if test="isMoney != null">#{isMoney},</if>
+            <if test="recLevel != null">#{recLevel},</if>
+            <if test="hotLevel != null">#{hotLevel},</if>
+            <if test="money !=null">#{money},</if>
+            <if test="source !=null">#{source},</if>
+            <if test="fileUrl !=null">#{fileUrl},</if>
+            <if test="policyObject !=null">#{policyObject},</if>
+            <if test="policyCondition !=null">#{policyCondition},</if>
+            <if test="policyDocDetail !=null">#{policyDocDetail},</if>
+            1,
+            <if test="docNumber!=null">#{docNumber},</if>
+            <if test="docDetail!=null">#{docDetail},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePolicy" parameterType="Policy">
+        update policy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="publishDate != null">publish_date = #{publishDate},</if>
+            <if test="expireDate!=null">expire_date=#{expireDate},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="formula != null">formula= #{formula},</if>
+            <if test="phone != null">phone= #{phone},</if>
+            <if test="contact != null">contact= #{contact},</if>
+            <if test="isMoney != null">is_money= #{isMoney},</if>
+            <if test="recLevel != null">rec_level= #{recLevel},</if>
+            <if test="hotLevel != null">hot_level= #{hotLevel},</if>
+            <if test="money !=null">money=#{money},</if>
+            <if test="source !=null">source= #{source},</if>
+            <if test="fileUrl !=null">file_url=#{fileUrl},</if>
+            <if test="policyObject !=null">policy_object= #{policyObject},</if>
+            <if test="isCustom!=null">is_custom=#{isCustom},</if>
+            <if test="docNumber!=null" >doc_number=#{docNumber},</if>
+            <if test="docDetail!=null"> doc_detail=#{docDetail},</if>
+            <if test="policyCondition !=null">policy_condition= #{policyCondition},</if>
+            <if test="policyDocDetail !=null">policy_doc_detail= #{policyDocDetail},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePolicyById" parameterType="Integer">
+        delete from policy where id = #{id}
+    </delete>
+
+
+    <delete id="deletePolicyByIds" parameterType="String">
+        delete from policy where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertPolicyModelRecord" useGeneratedKeys="true">
+        INSERT INTO policy_model_indicator_record (id,policy_id, indicator_dictionary_id, operator, threshold)
+        VALUES (null,#{policyId}, #{dictionaryId}, #{operator}, #{threshold})
+    </insert>
+
+    <update id="updatePolicyFormula" >
+        update policy
+        SET formula = #{formula}
+        where id = #{policyId}
+    </update>
+
+    <select id="selectPolicyModelListByPolicyId" parameterType="Integer" resultMap="PolicyModelResult">
+        SELECT pmir.id AS id,cid.name AS `name`,cid.`key` AS `key`,p.id AS policy_id,cid.`id` AS indicator_dictionary_id,pmir.`operator` AS operator,pmir.`threshold` AS threshold,p.formula AS `formula`,pmir.complex_formula AS complex_formula
+        FROM company_indicator_dictionary cid JOIN policy_model_indicator_record pmir ON cid.id=pmir.indicator_dictionary_id
+        JOIN policy p ON p.id=pmir.`policy_id`
+        <where>
+            <if test="policyId != null"> and policy_id = #{policyId}</if>
+        </where>
+    </select>
+
+    <select id="selectPolicyByClass" parameterType="String" resultType="com.ruoyi.web.controller.policy.domain.Policy">
+        SELECT p.*
+        FROM policy_properties_data ppd
+                 JOIN policy p ON ppd.policy_id = p.id
+                 JOIN policy_category_data pcd ON ppd.policy_category_data_id = pcd.id
+                 JOIN policy_category pc ON pcd.policy_category_id = pc.id
+        WHERE pc.name = #{policyType}
+          AND pcd.content = #{subPolicyType}
+    </select>
+    <select id="selectPolicyByPublishDate" resultType="com.ruoyi.web.controller.policy.domain.Policy">
+        SELECT *
+        FROM policy
+        ORDER BY publish_date DESC
+    </select>
+    <select id="selectPolicyByPublishDate1" resultType="com.ruoyi.web.controller.policy.domain.Policy">
+        SELECT *
+        FROM policy
+        ORDER BY publish_date DESC
+        LIMIT 5
+    </select>
+    <select id="selectPolicyByRec" resultType="com.ruoyi.web.controller.policy.domain.Policy">
+        SELECT *
+        FROM policy
+        ORDER BY rec_level DESC
+    </select>
+    <select id="selectPolicyByHotLevel" resultType="com.ruoyi.web.controller.policy.domain.Policy">
+        SELECT *
+        FROM policy
+        ORDER BY hot_level DESC
+    </select>
+</mapper>
